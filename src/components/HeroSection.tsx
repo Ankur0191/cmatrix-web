@@ -12,7 +12,7 @@ export default function HeroSection() {
     return (
         <>
             <Head>
-                <title>CMatrix – AI Coding Companion for Students</title>
+                <title>CMatrix 	&ndash; AI Coding Companion for Students</title>
                 <meta name="description" content="Join the movement. CMatrix is your personal AI coding buddy – trusted by students, designed by students." />
             </Head>
 
@@ -42,13 +42,17 @@ export default function HeroSection() {
                 <Box
                     sx={{
                         position: 'absolute',
-                        inset: 0,
-                        background: 'radial-gradient(circle at 30% 30%, #6E7FF3 0%, transparent 60%)',
+                        left: '-5%',
+                        top: '10%',
+                        width: '100%',
+                        height: '100%',
                         opacity: 0.05,
+                        backgroundImage: 'url(/ai-pattern.svg)',
+                        backgroundRepeat: 'repeat',
+                        backgroundSize: 'contain',
                         zIndex: 0,
                     }}
                 />
-
 
                 <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
                     <Box
@@ -75,7 +79,7 @@ export default function HeroSection() {
                                     mb: 2,
                                 }}
                             >
-                                CMatrix – Your AI Coding Companion
+                                CMatrix &ndash; Your AI Coding Companion
                             </Typography>
 
                             <Typography variant="h6" sx={{ fontSize: '1.2rem', mb: 2 }}>
@@ -100,7 +104,7 @@ export default function HeroSection() {
                                     maxWidth: '90%',
                                 }}
                             >
-                                Supercharge your productivity with AI-driven solutions – solve bugs, write code, and scale faster than ever.
+                                Supercharge your productivity with AI-driven solutions &ndash; solve bugs, write code, and scale faster than ever.
                             </Typography>
 
                             <Box display="flex" gap={2} flexWrap="wrap">

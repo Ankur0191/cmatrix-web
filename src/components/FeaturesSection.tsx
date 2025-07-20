@@ -3,7 +3,6 @@
 import {
   Box,
   Typography,
-  Grid,
   Container,
   Paper,
   useTheme,
@@ -18,13 +17,13 @@ const features = [
   {
     title: 'AI Notes Enhancer',
     description:
-      'Summarize lectures or PDFs into crisp flashcards, mind maps, and bullet points — instantly.',
+      'Summarize lectures or PDFs into crisp flashcards, mind maps, and bullet points &mdash; instantly.',
     icon: <NotesIcon fontSize="large" sx={{ color: '#00FFC6' }} />,
   },
   {
     title: 'Live + Recorded Lectures',
     description:
-      'Study like a pro. Attend elite lectures with real-time doubt-solving.',
+      'Study like a pro. Apply for elite lectures with real-time doubt-solving.',
     icon: <SchoolIcon fontSize="large" sx={{ color: '#33B7FF' }} />,
   },
   {
@@ -36,7 +35,7 @@ const features = [
   {
     title: 'Internships + Hackathons',
     description:
-      'From resume to reality — launch your career with verified real-world projects.',
+      'From resume to reality &mdash; launch your career with verified real-world projects.',
     icon: <EmojiEventsIcon fontSize="large" sx={{ color: '#FFBD33' }} />,
   },
 ]
@@ -78,7 +77,7 @@ export default function FeaturesSection() {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            🚀 Why Students Love CMatrix
+            &raquo; Why Students Love CMatrix
           </Typography>
 
           <Typography
@@ -89,14 +88,29 @@ export default function FeaturesSection() {
             fontSize="1rem"
             sx={{ mb: 6 }}
           >
-            More than tools — a rebellion. These are the features making
+            More than tools &mdash; a rebellion. These are the features making
             CMatrix the heart of student-powered learning.
           </Typography>
         </motion.div>
 
-        <Grid container spacing={4}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: 4,
+            mx: -2,
+          }}
+        >
           {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={6} key={index}>
+            <Box
+              key={index}
+              sx={{
+                flex: { xs: '0 0 calc(100% - 32px)', sm: '0 0 calc(50% - 32px)', md: '0 0 calc(50% - 32px)' },
+                maxWidth: { xs: '100%', sm: '50%', md: '50%' },
+                px: 2,
+              }}
+            >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -127,9 +141,9 @@ export default function FeaturesSection() {
                   </Typography>
                 </Paper>
               </motion.div>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       </Container>
     </Box>
   )

@@ -37,8 +37,8 @@ export default function Footer() {
           variant="body2"
           sx={{ color: 'gray.400', maxWidth: 500, px: 2 }}
         >
-          This isn’t just an app. It’s a campus. A crew. A cause. <br />
-          We’re building the future, one late night and bold idea at a time.
+          This isn&apos;t just an app. It&apos;s a campus. A crew. A cause. <br />
+          We&apos;re building the future, one late night and bold idea at a time.
         </Typography>
 
         <Stack direction="row" spacing={3} alignItems="center">

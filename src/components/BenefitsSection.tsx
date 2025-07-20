@@ -5,7 +5,6 @@ import {
   Typography,
   Box,
   Avatar,
-  useTheme,
   Stack,
 } from '@mui/material'
 import { motion } from 'framer-motion'
@@ -42,8 +41,6 @@ const benefits = [
 ]
 
 export default function BenefitsSection() {
-  const theme = useTheme()
-
   return (
     <Box component="section" sx={{ py: { xs: 10, md: 16 }, position: 'relative' }}>
       <Container maxWidth="md">
@@ -74,7 +71,7 @@ export default function BenefitsSection() {
             mx="auto"
             sx={{ mb: 8 }}
           >
-            These aren't features. They're tools for transformation — mental, academic, and emotional.
+            These aren&rsquo;t features. They&rsquo;re tools for transformation — mental, academic, and emotional.
           </Typography>
         </motion.div>
 

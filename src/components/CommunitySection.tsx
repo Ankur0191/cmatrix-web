@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { Container, Typography, Box, Avatar, Grid, Paper } from '@mui/material'
-import { motion } from 'framer-motion'
-import Diversity3Icon from '@mui/icons-material/Diversity3'
-import CodeIcon from '@mui/icons-material/Code'
-import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects'
-import AutoStoriesIcon from '@mui/icons-material/AutoStories'
+import { Container, Typography, Box, Avatar, Paper } from '@mui/material';
+import { motion } from 'framer-motion';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import CodeIcon from '@mui/icons-material/Code';
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 const avatars = [
   { label: 'Coders', icon: <CodeIcon />, color: '#00D8FF' },
   { label: 'Thinkers', icon: <EmojiObjectsIcon />, color: '#6E7FF3' },
   { label: 'Dreamers', icon: <AutoStoriesIcon />, color: '#FF69B4' },
   { label: 'Collaborators', icon: <Diversity3Icon />, color: '#FFC107' },
-]
+];
 
 export default function CommunitySection() {
   return (
@@ -55,9 +55,24 @@ export default function CommunitySection() {
           </Typography>
         </motion.div>
 
-        <Grid container spacing={4} justifyContent="center">
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: 4,
+            mx: -2,
+          }}
+        >
           {avatars.map((item, index) => (
-            <Grid item xs={6} sm={3} key={index}>
+            <Box
+              key={index}
+              sx={{
+                flex: { xs: '0 0 calc(50% - 32px)', sm: '0 0 calc(25% - 32px)' },
+                maxWidth: { xs: '50%', sm: '25%' },
+                px: 2,
+              }}
+            >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -85,9 +100,9 @@ export default function CommunitySection() {
                   <Typography variant="subtitle1">{item.label}</Typography>
                 </Box>
               </motion.div>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -114,15 +129,14 @@ export default function CommunitySection() {
             }}
           >
             <em>
-              "I joined for the tools. I stayed for the tribe."
+              &quot;I joined for the tools. I stayed for the tribe.&quot;
               <br />
               <br />
-              CMatrix isn’t an app. It’s your crew, your revolution, your digital
-              campus.
+              CMatrix isn&apos;t an app. It&apos;s your crew, your revolution, your digital campus.
             </em>
           </Paper>
         </motion.div>
       </Container>
     </Box>
-  )
+  );
 }

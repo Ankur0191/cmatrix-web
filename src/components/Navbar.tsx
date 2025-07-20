@@ -1,21 +1,21 @@
 'use client'
 
 import {
-  AppBar,
   Box,
-  Toolbar,
   Button,
   Typography,
-  Container,
   IconButton,
   Drawer,
   List,
   ListItem,
+  ListItemButton,
+  ListItemText,
   useTheme,
   useMediaQuery,
   Paper,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import Link from 'next/link'
 import { useState } from 'react'
 
 export default function Navbar() {
@@ -34,7 +34,7 @@ export default function Navbar() {
           zIndex: 1300,
           display: 'flex',
           justifyContent: 'center',
-          px: '30px', // leave 10px space on both sides
+          px: '30px',
           py: 2.5,
         }}
       >
@@ -89,7 +89,6 @@ export default function Navbar() {
         </Paper>
       </Box>
 
-      {/* Mobile Drawer */}
       <Drawer
         anchor="right"
         open={drawerOpen}
@@ -97,11 +96,15 @@ export default function Navbar() {
       >
         <Box sx={{ width: 220, p: 2 }}>
           <List>
-            <ListItem button component="a" href="/blog">
-              Blogs
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="/blog">
+                <ListItemText primary="Blogs" />
+              </ListItemButton>
             </ListItem>
-            <ListItem button component="a" href="#">
-              Download
+            <ListItem disablePadding>
+              <ListItemButton component={Link} href="#">
+                <ListItemText primary="Download" />
+              </ListItemButton>
             </ListItem>
           </List>
         </Box>
