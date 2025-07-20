@@ -9,11 +9,40 @@ import Image from 'next/image'
 import Head from 'next/head'
 
 export default function HeroSection() {
+    const schemaMarkup = {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "CMatrix",
+        "operatingSystem": "Android, iOS, Web",
+        "applicationCategory": "DeveloperTool",
+        "description": "CMatrix is your AI-powered coding assistant designed for students. Get instant help with debugging, writing code, and enhancing productivity.",
+        "url": "https://www.thecmatrix.com",
+        "screenshot": "https://www.thecmatrix.com/phone-mock.png"
+    }
+
     return (
         <>
             <Head>
-                <title>CMatrix 	&ndash; AI Coding Companion for Students</title>
-                <meta name="description" content="Join the movement. CMatrix is your personal AI coding buddy – trusted by students, designed by students." />
+                <title>CMatrix – AI Coding Assistant for Students & Developers</title>
+                <meta name="description" content="CMatrix is an AI-powered coding companion built for students. Debug code, get instant coding help, and learn faster. Try the app now!" />
+                <meta name="keywords" content="AI coding assistant, student coding tool, debug with AI, CMatrix app, coding productivity" />
+                <meta name="robots" content="index, follow" />
+
+                {/* Open Graph Tags */}
+                <meta property="og:title" content="CMatrix – AI Coding Assistant for Students" />
+                <meta property="og:description" content="Boost your coding productivity with CMatrix – your personal AI companion built for students." />
+                <meta property="og:image" content="https://www.thecmatrix.com/phone-mock.png" />
+                <meta property="og:url" content="https://www.thecmatrix.com" />
+                <meta property="og:type" content="website" />
+
+                {/* Twitter Card Tags */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="CMatrix – AI Coding Assistant" />
+                <meta name="twitter:description" content="Your personal AI-powered coding assistant made for students." />
+                <meta name="twitter:image" content="https://www.thecmatrix.com/phone-mock.png" />
+
+                {/* Structured Data */}
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }} />
             </Head>
 
             <Box
@@ -24,7 +53,7 @@ export default function HeroSection() {
                     py: { xs: 8, md: 12 },
                 }}
             >
-                {/* Blurred Background Circle */}
+                {/* Background Decorations */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -37,8 +66,6 @@ export default function HeroSection() {
                         zIndex: 0,
                     }}
                 />
-
-                {/* AI Visual Background Doodles */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -70,7 +97,7 @@ export default function HeroSection() {
                             style={{ flex: 1 }}
                         >
                             <Typography
-                                variant="h2"
+                                variant="h1"
                                 component="h1"
                                 sx={{
                                     fontWeight: 800,
@@ -79,15 +106,15 @@ export default function HeroSection() {
                                     mb: 2,
                                 }}
                             >
-                                CMatrix &ndash; Your AI Coding Companion
+                                AI-Powered Coding Help for Students
                             </Typography>
 
                             <Typography variant="h6" sx={{ fontSize: '1.2rem', mb: 2 }}>
                                 <ReactTyped
                                     strings={[
-                                        'Instant coding support.',
-                                        'AI debugging assistant.',
-                                        'Built for developers, by developers.',
+                                        'AI debugging in seconds.',
+                                        'Learn to code faster.',
+                                        'Built for students like you.',
                                     ]}
                                     typeSpeed={40}
                                     backSpeed={30}
@@ -104,7 +131,7 @@ export default function HeroSection() {
                                     maxWidth: '90%',
                                 }}
                             >
-                                Supercharge your productivity with AI-driven solutions &ndash; solve bugs, write code, and scale faster than ever.
+                                CMatrix is your smart AI coding companion – solve bugs instantly, write code faster, and boost learning with personalized support.
                             </Typography>
 
                             <Box display="flex" gap={2} flexWrap="wrap">
@@ -153,14 +180,13 @@ export default function HeroSection() {
                             </Box>
                         </motion.div>
 
-                        {/* Right Image + Dots */}
+                        {/* Right Side Image */}
                         <motion.div
                             initial={{ opacity: 0, x: 50 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8 }}
                             style={{ flex: 1, display: 'flex', justifyContent: 'center', position: 'relative' }}
                         >
-                            {/* Connection Dots around image */}
                             <Box
                                 sx={{
                                     position: 'absolute',
@@ -190,7 +216,7 @@ export default function HeroSection() {
 
                             <Image
                                 src="/phone-mock.png"
-                                alt="CMatrix App Preview"
+                                alt="Preview of the CMatrix AI Coding App"
                                 width={300}
                                 height={600}
                                 style={{
