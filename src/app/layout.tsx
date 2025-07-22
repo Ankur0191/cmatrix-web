@@ -3,6 +3,7 @@
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../theme'
 import CssBaseline from '@mui/material/CssBaseline'
+import { Analytics } from "@vercel/analytics/next"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
