@@ -1,9 +1,9 @@
 'use client'
 
 import { ThemeProvider } from '@mui/material/styles'
-import theme from '../theme'
 import CssBaseline from '@mui/material/CssBaseline'
-import { Analytics } from "@vercel/analytics/next"
+import theme from '../theme'
+import { Analytics } from '@vercel/analytics/react'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {children}
+          <Analytics /> {/* ✅ Renders correctly for Vercel Analytics */}
         </ThemeProvider>
       </body>
     </html>
