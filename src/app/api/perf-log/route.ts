@@ -1,47 +1,36 @@
+// src/app/api/perf-log/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 
-// Define a basic schema (can replace with zod later)
-interface PerfLog {
-  page: string
-  loadTime: number
-  domLoad: number
-  ttfb: number
-  userAgent: string
-  timestamp: string
-}
-
-function isValidLog(log: any): log is PerfLog {
-  return (
-    typeof log.page === 'string' &&
-    typeof log.loadTime === 'number' &&
-    typeof log.domLoad === 'number' &&
-    typeof log.ttfb === 'number' &&
-    typeof log.userAgent === 'string' &&
-    typeof log.timestamp === 'string'
-  )
+interface PerfLogPayload {
+  url: string
+  ttfb?: number
+  fcp?: number
+  domLoad?: number
+  windowLoad?: number
+  userAgent?: string
+  ip?: string
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
+    const payload: PerfLogPayload = await req.json()
 
-    if (!isValidLog(body)) {
-      return NextResponse.json({ error: 'Invalid log format' }, { status: 400 })
+    // Basic validation
+    if (!payload.url || typeof payload.url !== 'string') {
+      return NextResponse.json({ error: 'Missing or invalid URL' }, { status: 400 })
     }
 
-    // Optional: block bots, crawlers
-    if (/bot|crawl|spider/i.test(body.userAgent)) {
-      return NextResponse.json({ ignored: true }, { status: 200 })
+    const log = {
+      ...payload,
+      timestamp: new Date().toISOString(),
     }
 
-    console.log('✅ Performance Log:', body)
+    console.log('[PERF LOG]', log)
 
-    // 🔒 TODO: Store in Firestore or Supabase instead
-    // await db.collection('perfLogs').add(body)
-
-    return NextResponse.json({ success: true })
-  } catch (err) {
-    console.error('❌ Error logging performance:', err)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json({ status: 'ok' })
+  } catch (error: unknown) {
+    console.error('Error logging performance:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
