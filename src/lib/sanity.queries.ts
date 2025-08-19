@@ -1,3 +1,4 @@
+// lib/sanityCli.queries.ts
 export const getPostsQuery = `*[_type == "post"]{
   _id,
   title,

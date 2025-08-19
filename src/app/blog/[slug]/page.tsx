@@ -1,3 +1,4 @@
+// blog/[slug]/page.tsx 
 import { client } from "@/sanity/lib/client";
 import { getPostBySlugQuery } from "@/sanity/lib/sanity.queries";
 import { PortableText } from "@portabletext/react";
