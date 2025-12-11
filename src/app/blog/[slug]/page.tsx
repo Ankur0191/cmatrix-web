@@ -11,7 +11,7 @@ import type { Metadata } from "next";
 export const dynamicParams = true;
 export const revalidate = 60;
 
-// SEO Metadata Generation
+// --------- SEO Metadata Generation ---------
 export async function generateMetadata({
   params,
 }: {
@@ -21,12 +21,15 @@ export async function generateMetadata({
     slug: decodeURIComponent(params.slug),
   });
 
-  if (!post) return { title: "Post not found - CMatrix" };
+  if (!post)
+    return {
+      title: "Post not found - CMatrix",
+    };
 
   const imageUrl =
-    (post.mainImage?.asset && "url" in post.mainImage.asset
+    post.mainImage?.asset && "url" in post.mainImage.asset
       ? (post.mainImage.asset as { url: string }).url
-      : undefined) || "https://cmatrix.in/og-banner.jpg";
+      : "https://cmatrix.in/og-banner.jpg";
 
   return {
     title: post.title,
@@ -35,13 +38,7 @@ export async function generateMetadata({
       title: post.title,
       description: post.excerpt || "",
       url: `https://cmatrix.in/blog/${params.slug}`,
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-        },
-      ],
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
@@ -52,39 +49,54 @@ export async function generateMetadata({
   };
 }
 
-interface PageProps {
+// --------- PAGE COMPONENT ---------
+export default async function Page({
+  params,
+}: {
   params: { slug: string };
-}
+}) {
+  const slug = decodeURIComponent(params.slug);
 
-export default async function Page({ params }: PageProps) {
-  const decodedSlug = decodeURIComponent(params.slug);
   const post: Post | null = await client.fetch(getPostBySlugQuery, {
-    slug: decodedSlug,
+    slug,
   });
 
   if (!post) return notFound();
 
   const imageUrl =
-    (post.mainImage?.asset && "url" in post.mainImage.asset
+    post.mainImage?.asset && "url" in post.mainImage.asset
       ? (post.mainImage.asset as { url: string }).url
-      : undefined) || "https://cmatrix.in/og-banner.jpg";
+      : null;
 
-  // Safe reading time calculation for PortableText
-  const extractText = (blocks: any[] = []): string =>
+  // --------- SAFE PORTABLETEXT READING TIME ----------
+  const extractText = (blocks: unknown[] = []): string =>
     blocks
-      .flatMap((block: any) =>
-        Array.isArray(block.children)
-          ? block.children
-              .filter((child: any) => typeof child.text === "string")
-              .map((child: any) => child.text)
-          : []
-      )
+      .flatMap((block) => {
+        if (
+          typeof block === "object" &&
+          block !== null &&
+          "children" in block &&
+          Array.isArray((block as any).children)
+        ) {
+          return (block as any).children
+            .filter(
+              (child: unknown) =>
+                typeof child === "object" &&
+                child !== null &&
+                "text" in child &&
+                typeof (child as any).text === "string"
+            )
+            .map((child: any) => child.text as string);
+        }
+        return [];
+      })
       .join(" ");
 
   const textContent = extractText(post.body || []);
   const wordCount = textContent.split(/\s+/).filter(Boolean).length;
-  const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 wpm
+  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
+  // --------- RENDER PAGE ----------
   return (
     <main className="max-w-4xl mx-auto py-12 px-4">
       {imageUrl && (
