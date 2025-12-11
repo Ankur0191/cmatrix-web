@@ -23,14 +23,10 @@ export async function generateMetadata({
 
   if (!post) return { title: "Post not found - CMatrix" };
 
-  const imageRef = post?.mainImage?.asset?._ref;
-  const imageUrl = imageRef
-    ? imageRef
-        .replace("image-", "https://cdn.sanity.io/images/33eaztic/production/")
-        .replace("-jpg", ".jpg")
-        .replace("-png", ".png")
-        .replace("-webp", ".webp")
-    : "https://cmatrix.in/og-banner.jpg";
+  const imageUrl =
+    (post.mainImage?.asset && "url" in post.mainImage.asset
+      ? (post.mainImage.asset as { url: string }).url
+      : undefined) || "https://cmatrix.in/og-banner.jpg";
 
   return {
     title: post.title,
@@ -68,23 +64,25 @@ export default async function Page({ params }: PageProps) {
 
   if (!post) return notFound();
 
-  const imageRef = post?.mainImage?.asset?._ref;
-  const imageUrl = imageRef
-    ? imageRef
-        .replace("image-", "https://cdn.sanity.io/images/33eaztic/production/")
-        .replace("-jpg", ".jpg")
-        .replace("-png", ".png")
-        .replace("-webp", ".webp")
-    : null;
+  const imageUrl =
+    (post.mainImage?.asset && "url" in post.mainImage.asset
+      ? (post.mainImage.asset as { url: string }).url
+      : undefined) || "https://cmatrix.in/og-banner.jpg";
 
-  // Estimate reading time
-  const wordCount = post.body
-    ? post.body
-        .map((block: any) =>
-          block.children?.map((child: any) => child.text).join(" ")
-        )
-        .join(" ").split(" ").length
-    : 0;
+  // Safe reading time calculation for PortableText
+  const extractText = (blocks: any[] = []): string =>
+    blocks
+      .flatMap((block: any) =>
+        Array.isArray(block.children)
+          ? block.children
+              .filter((child: any) => typeof child.text === "string")
+              .map((child: any) => child.text)
+          : []
+      )
+      .join(" ");
+
+  const textContent = extractText(post.body || []);
+  const wordCount = textContent.split(/\s+/).filter(Boolean).length;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 wpm
 
   return (
@@ -103,7 +101,8 @@ export default async function Page({ params }: PageProps) {
 
       <div className="text-sm text-gray-500 mb-6 space-x-4">
         <span>
-          🗓 {new Date(post.publishedAt).toLocaleDateString("en-IN", {
+          🗓{" "}
+          {new Date(post.publishedAt).toLocaleDateString("en-IN", {
             day: "numeric",
             month: "short",
             year: "numeric",
