@@ -1,19 +1,36 @@
-
-export const getPostsQuery = `*[_type == "post"]{
+export const getPostsQuery = `*[_type == "post"] | order(publishedAt desc){
   _id,
   title,
-  slug,
-  mainImage,
+  "slug": slug.current,
+  "mainImage": mainImage{
+    asset->{
+      _id,
+      url
+    }
+  },
   publishedAt,
   excerpt
-} | order(publishedAt desc)`;
+}`;
 
 export const getPostBySlugQuery = `*[_type == "post" && slug.current == $slug][0]{
   _id,
   title,
-  slug,
+  "slug": slug.current,
   body,
-  mainImage,
+  "mainImage": mainImage{
+    asset->{
+      _id,
+      url
+    }
+  },
   publishedAt,
-  author->{name, image}
+  excerpt,
+  author->{
+    name,
+    image{
+      asset->{
+        url
+      }
+    }
+  }
 }`;
