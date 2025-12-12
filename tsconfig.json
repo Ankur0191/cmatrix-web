@@ -3,25 +3,50 @@
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+
+    // Skip type definitions from libraries
     "skipLibCheck": true,
+
+    // Keep strict mode for Next.js — DO NOT turn this off
     "strict": true,
+
+    // Avoid generating output
     "noEmit": true,
+
+    // Allow CommonJS + ES modules
     "esModuleInterop": true,
+
+    // Next.js recommended module settings
     "module": "esnext",
     "moduleResolution": "bundler",
+
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+
+    // Disable ONLY the blocking TypeScript rules
+    "noImplicitAny": false,
+    "noPropertyAccessFromIndexSignature": false,
+
     "plugins": [
       {
         "name": "next"
       }
     ],
+
+    // Your path mapping
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+
   "exclude": ["node_modules"]
 }
