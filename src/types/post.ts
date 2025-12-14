@@ -1,15 +1,13 @@
-import type { PortableTextBlock } from '@portabletext/types'
+import type { PortableTextBlock } from "@portabletext/types";
 
 export interface Post {
   _id: string;
   title: string;
-  slug: {
-    current: string;
-  };
-  mainImage: {
+  slug: string; // ✅ FIXED
+  mainImage?: {
     asset: {
-      _ref: string;
-      _type: string;
+      _id: string;
+      url: string;
     };
   };
   publishedAt: string;
@@ -17,10 +15,9 @@ export interface Post {
   body?: PortableTextBlock[];
   author?: {
     name: string;
-    image: {
+    image?: {
       asset: {
-        _ref: string;
-        _type: string;
+        url: string;
       };
     };
   };

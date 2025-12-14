@@ -1,30 +1,34 @@
-// blog/[slug]/page.tsx 
+// src/app/blog/[slug]/page.tsx
+
 import { client } from "@/sanity/lib/client";
 import { getPostBySlugQuery } from "@/sanity/lib/sanity.queries";
-import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Post } from "@/types/post";
 import type { Metadata } from "next";
 
-// Static site generation config
+// ISR config
 export const dynamicParams = true;
 export const revalidate = 60;
 
-// --------- SEO Metadata Generation ---------
+// ---------- SEO METADATA ----------
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
+
   const post: Post | null = await client.fetch(getPostBySlugQuery, {
-    slug: decodeURIComponent(params.slug),
+    slug: decodedSlug,
   });
 
-  if (!post)
+  if (!post) {
     return {
       title: "Post not found - CMatrix",
     };
+  }
 
   const imageUrl =
     post.mainImage?.asset && "url" in post.mainImage.asset
@@ -37,8 +41,14 @@ export async function generateMetadata({
     openGraph: {
       title: post.title,
       description: post.excerpt || "",
-      url: `https://cmatrix.in/blog/${params.slug}`,
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
+      url: `https://cmatrix.in/blog/${decodedSlug}`,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -49,16 +59,17 @@ export async function generateMetadata({
   };
 }
 
-// --------- PAGE COMPONENT ---------
+// ---------- PAGE ----------
 export default async function Page({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const slug = decodeURIComponent(params.slug);
+  const { slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
 
   const post: Post | null = await client.fetch(getPostBySlugQuery, {
-    slug,
+    slug: decodedSlug,
   });
 
   if (!post) return notFound();
@@ -68,7 +79,7 @@ export default async function Page({
       ? (post.mainImage.asset as { url: string }).url
       : null;
 
-  // --------- SAFE PORTABLETEXT READING TIME ----------
+  // ---------- READING TIME ----------
   const extractText = (blocks: unknown[] = []): string =>
     blocks
       .flatMap((block) => {
@@ -96,7 +107,7 @@ export default async function Page({
   const wordCount = textContent.split(/\s+/).filter(Boolean).length;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-  // --------- RENDER PAGE ----------
+  // ---------- RENDER ----------
   return (
     <main className="max-w-4xl mx-auto py-12 px-4">
       {imageUrl && (
@@ -106,6 +117,7 @@ export default async function Page({
           width={1200}
           height={630}
           className="w-full h-auto rounded-lg mb-8"
+          priority
         />
       )}
 
@@ -125,7 +137,7 @@ export default async function Page({
       </div>
 
       <div className="prose prose-lg max-w-none">
-        <PortableText value={post.body ?? []} />
+        {/* <PortableText value={post.body ?? []} /> */}
       </div>
     </main>
   );

@@ -32,7 +32,8 @@ export default function BlogPostCard({ post }: Props) {
           />
         )}
         <CardContent>
-          <Link href={`/blog/${post.slug.current}`} passHref>
+          <Link href={`/blog/${post.slug}`} passHref>
+
             <Typography variant="h6" fontWeight={600} gutterBottom color="primary">
               {post.title}
             </Typography>
