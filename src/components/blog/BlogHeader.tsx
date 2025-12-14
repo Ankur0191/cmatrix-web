@@ -11,15 +11,16 @@ export default function BlogHeader() {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.5 }}
     >
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Box display="flex" alignItems="center" gap={1}>
+      <Box className="flex justify-between items-center mb-6">
+        <Box className="flex items-center gap-2">
           <Newspaper size={28} />
           <Typography variant="h4" fontWeight={700}>
             CMatrix Blog
           </Typography>
         </Box>
+
         <Link href="/">
           <Button variant="contained" color="primary">
             Go to Home

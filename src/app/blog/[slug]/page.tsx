@@ -1,50 +1,80 @@
 // src/app/blog/[slug]/page.tsx
 
+import Image from "next/image";
 import { client } from "@/sanity/lib/client";
 import { getPostBySlugQuery } from "@/sanity/lib/sanity.queries";
-import Image from "next/image";
+import { PortableText } from "@portabletext/react";
 import { notFound } from "next/navigation";
-import type { Post } from "@/types/post";
 import type { Metadata } from "next";
+import type { Post } from "@/types/post";
 
-// ISR config
-export const dynamicParams = true;
+// ISR
 export const revalidate = 60;
+export const dynamicParams = true;
 
-// ---------- SEO METADATA ----------
+// ---------- PORTABLE TEXT COMPONENTS ----------
+const ptComponents = {
+  types: {
+    image: ({ value }: any) => (
+      <Image
+        src={value.asset.url}
+        alt={value.alt || "Blog Image"}
+        width={800}
+        height={500}
+        className="rounded-lg my-6 w-full h-auto"
+      />
+    ),
+  },
+  block: {
+    h2: ({ children }: any) => (
+      <h2 className="text-3xl font-semibold mt-10 mb-4">{children}</h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="text-2xl font-semibold mt-8 mb-3">{children}</h3>
+    ),
+    blockquote: ({ children }: any) => (
+      <blockquote className="border-l-4 border-blue-500 pl-4 italic my-6 text-gray-600">
+        {children}
+      </blockquote>
+    ),
+  },
+  marks: {
+    link: ({ children, value }: any) => (
+      <a
+        href={value.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 underline hover:text-blue-800"
+      >
+        {children}
+      </a>
+    ),
+  },
+};
+
+// ---------- SEO ----------
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
+  const post: Post | null = await client.fetch(getPostBySlugQuery, { slug });
 
-  const post: Post | null = await client.fetch(getPostBySlugQuery, {
-    slug: decodedSlug,
-  });
-
-  if (!post) {
+  if (!post)
     return {
-      title: "Post not found - CMatrix",
+      title: "Post Not Found • CMatrix",
     };
-  }
-
-  const imageUrl =
-    post.mainImage?.asset && "url" in post.mainImage.asset
-      ? (post.mainImage.asset as { url: string }).url
-      : "https://cmatrix.in/og-banner.jpg";
 
   return {
     title: post.title,
-    description: post.excerpt || "Read this blog post on CMatrix.",
+    description: post.excerpt,
     openGraph: {
       title: post.title,
-      description: post.excerpt || "",
-      url: `https://cmatrix.in/blog/${decodedSlug}`,
+      description: post.excerpt,
       images: [
         {
-          url: imageUrl,
+          url: post.mainImage?.asset?.url || "",
           width: 1200,
           height: 630,
         },
@@ -53,8 +83,8 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: post.title,
-      description: post.excerpt || "",
-      images: [imageUrl],
+      description: post.excerpt,
+      images: [post.mainImage?.asset?.url || ""],
     },
   };
 }
@@ -66,58 +96,29 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
-
-  const post: Post | null = await client.fetch(getPostBySlugQuery, {
-    slug: decodedSlug,
-  });
+  const post: Post | null = await client.fetch(getPostBySlugQuery, { slug });
 
   if (!post) return notFound();
 
-  const imageUrl =
-    post.mainImage?.asset && "url" in post.mainImage.asset
-      ? (post.mainImage.asset as { url: string }).url
-      : null;
-
-  // ---------- READING TIME ----------
-  const extractText = (blocks: unknown[] = []): string =>
+  // Reading time
+  const extractText = (blocks: any[] = []) =>
     blocks
-      .flatMap((block) => {
-        if (
-          typeof block === "object" &&
-          block !== null &&
-          "children" in block &&
-          Array.isArray((block as any).children)
-        ) {
-          return (block as any).children
-            .filter(
-              (child: unknown) =>
-                typeof child === "object" &&
-                child !== null &&
-                "text" in child &&
-                typeof (child as any).text === "string"
-            )
-            .map((child: any) => child.text as string);
-        }
-        return [];
-      })
+      .flatMap(block =>
+        block.children?.map((child: any) => child.text) || ""
+      )
       .join(" ");
+  const readingTime =
+    Math.max(1, Math.ceil(extractText(post.body).split(" ").length / 200));
 
-  const textContent = extractText(post.body || []);
-  const wordCount = textContent.split(/\s+/).filter(Boolean).length;
-  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
-
-  // ---------- RENDER ----------
   return (
     <main className="max-w-4xl mx-auto py-12 px-4">
-      {imageUrl && (
+      {post.mainImage?.asset?.url && (
         <Image
-          src={imageUrl}
-          alt={post.title}
+          src={post.mainImage.asset.url}
+          alt={post.mainImage.alt}
           width={1200}
           height={630}
-          className="w-full h-auto rounded-lg mb-8"
-          priority
+          className="rounded-lg w-full h-auto mb-8"
         />
       )}
 
@@ -132,13 +133,15 @@ export default async function Page({
             year: "numeric",
           })}
         </span>
+
         <span>✍️ {post.author?.name || "CMatrix"}</span>
+
         <span>⏱ {readingTime} min read</span>
       </div>
 
-      <div className="prose prose-lg max-w-none">
-        {/* <PortableText value={post.body ?? []} /> */}
-      </div>
+      <article className="prose prose-lg max-w-none">
+        <PortableText value={post.body} components={ptComponents} />
+      </article>
     </main>
   );
 }

@@ -1,3 +1,5 @@
+// sanity/lib/sanity.queries.ts
+
 export const getPostsQuery = `*[_type == "post"] | order(publishedAt desc){
   _id,
   title,
@@ -6,9 +8,9 @@ export const getPostsQuery = `*[_type == "post"] | order(publishedAt desc){
   publishedAt,
   mainImage{
     asset->{
-      _id,
       url
-    }
+    },
+    alt
   }
 }`;
 
@@ -21,9 +23,9 @@ export const getPostBySlugQuery = `*[_type == "post" && slug.current == $slug][0
   publishedAt,
   mainImage{
     asset->{
-      _id,
       url
-    }
+    },
+    alt
   },
   author->{
     name,
